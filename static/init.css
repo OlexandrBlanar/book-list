@@ -10,7 +10,7 @@ img {
 }
 
 div {
-	margin: 10 5 5 5;
+	margin: 10px 5px 5px 5px;
 }
 
 .content {
@@ -77,4 +77,9 @@ div {
 
 .hide {
 	display: none;
+}
+
+.amount {
+	max-height: 50px;
+	min-width: 450px;
 }

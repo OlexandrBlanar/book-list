@@ -6,15 +6,12 @@ window.onload = function() {
     let arrRightList = [];
     let timeout;
 
-    loadData();
-
-    arrLeftList.forEach((book) => createElementItem(book, parentElemLeft, 'after'));
-    arrRightList.forEach((book) => createElementItem(book, parentElemRight, 'before'));
-
+    loadData(arrLeftList, arrRightList);
+    
     input.addEventListener('keydown', (event) => {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            search(event.target.value);
+            search(event.target.value.toLowerCase());
             parentElemLeft.innerHTML = '';
             parentElemRight.innerHTML = '';
             arrLeftList.forEach((book) => createElementItem(book, parentElemLeft, 'after'));
@@ -26,29 +23,34 @@ window.onload = function() {
 
         const xhr = new XMLHttpRequest();
         xhr.overrideMimeType("application/json");
-        xhr.open('GET', file, true); // Replace 'my_data' with the path to your file
-        xhr.onreadystatechange = function () {
+        xhr.open('GET', file, true);
+        xhr.onreadystatechange = () => {
 
-            if (xhr.readyState == 4) {
-                // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            if (xhr.readyState == 4 && xhr.status == 200) {
                 callback(xhr.responseText)
             }
         };
         xhr.send(null);
     }
 
-    function loadData() {
+    function loadData(arrLeftList, arrRightList) {
         if (window.localStorage.getItem('leftList') === null) {
-            loadJSON("./static/data.json", function(response) {
+            loadJSON("./static/data.json", (response) => {
                 window.localStorage.setItem('leftList', response);
                 const data = JSON.parse(response);
                 for (key in data) {
                     arrLeftList.push(data[key]);
                 }
+                createElementAmount(parentElemLeft, arrLeftList);
+                arrLeftList.forEach((book) => createElementItem(book, parentElemLeft, 'after'));
             });
 
         } else {
             getDataLocalStorage(arrLeftList, arrRightList);
+            createElementAmount(parentElemLeft, arrLeftList);
+            arrLeftList.forEach((book) => createElementItem(book, parentElemLeft, 'after'));
+            createElementAmount(parentElemRight, arrRightList);
+            arrRightList.forEach((book) => createElementItem(book, parentElemRight, 'before'));
         }
     }
 
@@ -66,16 +68,10 @@ window.onload = function() {
     }
 
     function search(text) {
-        console.log(text);
-
         getDataLocalStorage(arrLeftList, arrRightList);
-        arrLeftList = arrLeftList.filter(element => {
-            console.log(~element.name.indexOf(text) || ~element.author.indexOf(text));
-            return ~element.name.toLocaleLowerCase().indexOf(text) || ~element.author.toLocaleLowerCase().indexOf(text);
-        });
-        arrRightList = arrRightList.filter(element => {
-            return ~element.name.toLocaleLowerCase().indexOf(text) || ~element.author.toLocaleLowerCase().indexOf(text);
-        });
+
+        arrLeftList = arrLeftList.filter(element => ~element.author.toLowerCase().indexOf(text));
+        arrRightList = arrRightList.filter(element => ~element.author.toLowerCase().indexOf(text));
     }
 
     function createElementPic(book, parentElem) {
@@ -109,7 +105,7 @@ window.onload = function() {
         const arrow = document.createElement('div');
         const itemElem = parentElem.appendChild(item);
 
-        item.className = "item";
+        item.className = 'item';
         createElementPic(book, itemElem);
         createElementTitle(book, itemElem);
         arrow.className = pseudoElement;
@@ -119,11 +115,20 @@ window.onload = function() {
 
             changeLists(pseudoElement, bookName, arrLeftList, arrRightList);
             parentElemLeft.innerHTML = '';
+            createElementAmount(parentElemLeft, arrLeftList);
             arrLeftList.forEach((book) => createElementItem(book, parentElemLeft, 'after'));
             parentElemRight.innerHTML = '';
+            createElementAmount(parentElemRight, arrRightList);
             arrRightList.forEach((book) => createElementItem(book, parentElemRight, 'before'));
         });
 
+    }
+    
+    function createElementAmount(parentElem, arr) {
+        const elemAmount = document.createElement('div');
+
+        elemAmount.innerHTML = `Всего книг: ${arr.length}`;
+        parentElem.appendChild(elemAmount);
     }
 
     function changeLists(pseudoElement, bookName, arrLeftList, arrRightList) {

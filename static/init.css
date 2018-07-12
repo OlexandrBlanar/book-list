@@ -78,8 +78,3 @@ div {
 .hide {
 	display: none;
 }
-
-.amount {
-	max-height: 50px;
-	min-width: 450px;
-}

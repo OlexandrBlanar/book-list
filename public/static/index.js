@@ -35,7 +35,7 @@ window.onload = function() {
 
     function loadData(arrLeftList, arrRightList) {
         if (window.localStorage.getItem('leftList') === null) {
-            loadJSON("./static/data.json", (response) => {
+            loadJSON("books", (response) => {
                 window.localStorage.setItem('leftList', response);
                 const data = JSON.parse(response);
                 for (key in data) {

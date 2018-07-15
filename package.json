@@ -1,0 +1,25 @@
+{
+  "name": "book-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlexandrBlanar/book-list.git"
+  },
+  "author": "Blanar O.V.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OlexandrBlanar/book-list/issues"
+  },
+  "homepage": "https://github.com/OlexandrBlanar/book-list#readme",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0"
+  }
+}

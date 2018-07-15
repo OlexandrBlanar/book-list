@@ -27,7 +27,7 @@ window.onload = function() {
         xhr.onreadystatechange = () => {
 
             if (xhr.readyState == 4 && xhr.status == 200) {
-                callback(xhr.responseText)
+                callback(xhr.responseText);
             }
         };
         xhr.send(null);
@@ -38,6 +38,7 @@ window.onload = function() {
             loadJSON("books", (response) => {
                 window.localStorage.setItem('leftList', response);
                 const data = JSON.parse(response);
+                console.log(response);
                 for (key in data) {
                     arrLeftList.push(data[key]);
                 }
